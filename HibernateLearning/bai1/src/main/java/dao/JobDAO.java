@@ -1,8 +1,10 @@
 package dao;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -25,8 +27,8 @@ public class JobDAO {
 			return false;
 		}
 	}
-	
-	public Jobs findById(Integer jobId)  {
+
+	public Jobs findById(Integer jobId) {
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = session.beginTransaction();
 
@@ -36,6 +38,28 @@ public class JobDAO {
 		tx.commit();
 		session.close();
 		return job;
-    }
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Employees> findByJob(String jobTile) {
+		try (
+			Session session = HibernateUtils.getSessionFactory().openSession();
+		){
+			Query<Employees> query = session.createNamedQuery("FIND_EMP_BY_JOB");
+			query.setParameter("jobTitle", "%" + jobTile + "%");
+			return query.list();
+		} 
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Jobs> findAll() throws Exception {
+		try (
+				Session session = HibernateUtils.getSessionFactory().openSession();
+		){
+			Query<Jobs> query = session.createNativeQuery("SELECT * FROM dbo.Jobs")
+									.addEntity(Jobs.class);
+			return query.list();
+		}
+	}
 
 }

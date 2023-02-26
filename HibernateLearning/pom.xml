@@ -8,7 +8,8 @@
   
  	<modules>
 		 <module>bai1</module>
-	 </modules> 
+		 <module>asm_day3</module>
+ 	</modules> 
 	 
 	 <dependencies>
 		<dependency>
